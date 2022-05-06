@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Traits\ApiResponse;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use Illuminate\support\Facades\Hash;
 class AuthController extends Controller
 {
     //
@@ -14,7 +18,7 @@ class AuthController extends Controller
         $user=User::create([
             'name'=>$validated['name'],
             'email'=>$validated['email'],
-            'password'=>Hash::make(validated['password']),
+            'password'=>Hash::make($validated['password']),
         ]);
         $token=$user->createToken('auth_token')->plainTextToken;
         return $this->apiSuccess([

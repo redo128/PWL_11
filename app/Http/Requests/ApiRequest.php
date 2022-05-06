@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Traits\ApiResponse;
+use Illuminate\Contracts\Validation\Validator;
 
 abstract class ApiRequest extends FormRequest
 {
@@ -19,7 +21,7 @@ abstract class ApiRequest extends FormRequest
             Response::HTTP_UNPROCESSABLE_ENTITY,
         ));
     }
-    protected function failedAuthorization(Validator $validator){
+    protected function failedAuthorization(){
         throw new HttpResponseException($this->apiError(
             null,
             Response::HTTP_UNAUTHORIZED,
