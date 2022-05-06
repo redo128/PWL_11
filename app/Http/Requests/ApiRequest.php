@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 
+
 abstract class ApiRequest extends FormRequest
 {
     use ApiResponse;
