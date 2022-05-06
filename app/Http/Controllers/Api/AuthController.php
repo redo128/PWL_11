@@ -9,6 +9,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\support\Facades\Hash;
+use Illuminate\support\Facades\Auth;
 class AuthController extends Controller
 {
     //
@@ -39,5 +40,16 @@ class AuthController extends Controller
             'token_type'=>'Bearer',
             'user'=>$user
         ]);
+    }
+    public function logout(){
+try{
+    auth()->user()->tokens()->delete();
+    return $this->apiSuccess('Token revoked');
+}catch(\Throwable $e){
+    throw new HttpResponseException($this->apiError(
+        null,
+        Response::HTTP_INTERNAL_SERVER_ERROR
+    ));
+}
     }
 }
