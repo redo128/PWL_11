@@ -17,7 +17,9 @@ class TodoController extends Controller
      */
     public function index()
     {
-        //
+        $user=Auth()->user();
+        $todos=todo::with('user')->where('user_id',$user->id)->get();
+        return $this->apiSuccess($todos);
     }
 
     /**
@@ -28,7 +30,13 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validated();
+        $user=auth()->user();
+        $todo=new todo($request->all());
+        $todo->user()->associate($user);
+        $todo->save;
+
+        return $this->apiSuccess($todo->load('user'));
     }
 
     /**
@@ -39,7 +47,7 @@ class TodoController extends Controller
      */
     public function show(todo $todo)
     {
-        //
+        return $this->apiSuccess($todo->load('user'));
     }
 
     /**
@@ -51,7 +59,12 @@ class TodoController extends Controller
      */
     public function update(Request $request, todo $todo)
     {
-        //
+        $request->validated();
+        $todo->todo=$request->todo;
+        $todo->label=$request->label;
+        $todo->done=$request->done;
+        $todo->save();
+        return $this->apiSuccess($todo->load('user'));
     }
 
     /**
@@ -62,6 +75,13 @@ class TodoController extends Controller
      */
     public function destroy(todo $todo)
     {
-        //
+        if(auth()->user()->id==$todo->user_id){
+            $todo->delete;
+            return $this->apiSuccess($todo);
+        }
+        return $this->apiError(
+            'Unauthorized',
+            Response::HTTP_UNAUTHORIZED
+        );
     }
 }
